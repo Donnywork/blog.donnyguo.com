@@ -22,10 +22,27 @@ class Document(HTMLParser):
         self.alternates = {}
         self.canonical = None
         self.language = None
+        self.card_images = []
+        self.active_card = None
+        self.card_columns = []
+        self.blog_default = None
+        self.has_share_bar = False
         self.feed(text)
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        classes = attrs.get("class", "").split()
+        if "data-td-share" in attrs:
+            self.has_share_bar = True
+        if tag == "article" and "td-blog-card" in classes:
+            self.card_images.append([])
+            self.active_card = len(self.card_images) - 1
+        if tag == "img" and "td-blog-card__image" in classes and self.active_card is not None:
+            self.card_images[self.active_card].append(attrs.get("src", ""))
+        if "td-blog-cards" in classes:
+            self.card_columns.append(attrs.get("style", ""))
+        if "data-td-blog-default" in attrs:
+            self.blog_default = attrs["data-td-blog-default"]
         if attrs.get("id"):
             self.ids.add(attrs["id"])
         if tag == "html":
@@ -49,6 +66,10 @@ class Document(HTMLParser):
             match = re.search(r"url=(.+)", attrs.get("content", ""), re.I)
             if match:
                 self.links.append(match[1])
+
+    def handle_endtag(self, tag):
+        if tag == "article":
+            self.active_card = None
 
 
 def main():
@@ -91,12 +112,27 @@ def main():
     for file, doc in docs.items():
         relative = file.relative_to(root).as_posix()
         source = urljoin(base, relative.removesuffix("index.html"))
+        if doc.has_share_bar:
+            errors.add(f"{relative}: page-end sharing must remain disabled")
+        if any(len(images) != 1 or not images[0] for images in doc.card_images):
+            errors.add(f"{relative}: every article card must have one thumbnail")
         for link in doc.links:
             resolved = resolve(link, source)
             if resolved:
                 target, fragment = resolved
                 if fragment and target in docs and fragment not in docs[target].ids:
                     errors.add(f"{relative}: missing anchor {link}")
+
+    for route in ("index.html", "en/index.html", "blog/index.html", "en/blog/index.html"):
+        doc = docs.get(root / route)
+        if not doc:
+            continue
+        if not doc.card_images:
+            errors.add(f"{route}: missing cover-card article layout")
+        if not any(re.search(r"--td-card-columns:\s*3\s*(?:;|$)", style) for style in doc.card_columns):
+            errors.add(f"{route}: article cards must use three columns")
+        if doc.blog_default is not None and doc.blog_default != "cards":
+            errors.add(f"{route}: default article layout must be cards")
 
     for page in Path("content").rglob("*.md"):
         stem, language, _ = page.name.rsplit(".", 2)
@@ -126,10 +162,25 @@ def main():
         for name in ("index.xml", "blog/index.xml", "llms.txt", "sitemap.xml"):
             if not (language_root / name).is_file():
                 errors.add(f"Missing publication output: {language_root / name}")
+    cover_sizing_found = False
     for file in root.rglob("*.css"):
         source = urljoin(base, file.relative_to(root).as_posix())
-        for url in re.findall(r"url\(['\"]?([^)'\"]+)", file.read_text()):
+        css = file.read_text()
+        for selectors, declarations in re.findall(r"([^{}]+)\{([^{}]*)\}", css):
+            if ".td-blog-card__image" not in (item.strip() for item in selectors.split(",")):
+                continue
+            properties = {}
+            for declaration in declarations.split(";"):
+                if ":" in declaration:
+                    name, value = declaration.split(":", 1)
+                    properties[name.strip()] = re.sub(r"\s+", "", value)
+            if (properties.get("width") == "100%" and properties.get("height") == "auto"
+                    and properties.get("aspect-ratio") == "16/9"):
+                cover_sizing_found = True
+        for url in re.findall(r"url\(['\"]?([^)'\"]+)", css):
             resolve(url, source)
+    if not cover_sizing_found:
+        errors.add("Missing shared 16:9 cover sizing with width:100% and height:auto")
     indexes = list(root.rglob("*offline-search-index*.json"))
     if len(indexes) < 2:
         errors.add("Missing bilingual search indexes")
@@ -140,13 +191,6 @@ def main():
         if not entries:
             errors.add(f"Empty search index: {file}")
 
-    manifest = json.loads(Path("data/migration.json").read_text())
-    for article in manifest["articles"]:
-        slug = Path(article["source"]).stem
-        redirect = docs.get(root / slug / "index.html")
-        expected = urljoin(base, f"en/blog/{slug}/")
-        if not redirect or redirect.canonical != expected or expected not in redirect.links:
-            errors.add(f"Missing legacy redirect: /{slug}/ -> {expected}")
     for error in sorted(errors):
         print(error)
     if errors:

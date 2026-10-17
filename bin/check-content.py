@@ -1,19 +1,88 @@
 #!/usr/bin/env python3
-"""Validate bilingual content; optionally verify the original migration bodies."""
+"""Validate bilingual article metadata and images stored in page bundles."""
 
 import argparse
-import hashlib
-import json
 import re
+import shlex
 from pathlib import Path
+from urllib.parse import unquote, urlsplit
+
+
+IMAGE_SUFFIXES = {".avif", ".gif", ".jpeg", ".jpg", ".png", ".svg", ".webp"}
+
+
+def prose_only(body):
+    """Exclude fenced examples before checking article formatting and links."""
+    prose = []
+    fence = None
+    for line in body.splitlines():
+        if fence:
+            if re.fullmatch(rf" {{0,3}}{re.escape(fence[0])}{{{len(fence)},}}[ \t]*", line):
+                fence = None
+            continue
+        opening = re.match(r"^ {0,3}(`{3,}|~{3,})", line)
+        if opening:
+            fence = opening[1]
+        else:
+            prose.append(line)
+    return "\n".join(prose)
+
+
+def metadata_list(header, key):
+    """Read the simple YAML flow/block lists used for article metadata."""
+    lines = header.splitlines()
+    for index, line in enumerate(lines):
+        match = re.match(rf"^{re.escape(key)}:[ \t]*(.*)$", line)
+        if not match:
+            continue
+        value = match[1].strip()
+        flow = re.fullmatch(r"\[(.*)\]\s*(?:#.*)?", value)
+        if flow:
+            lexer = shlex.shlex(flow[1], posix=True)
+            lexer.whitespace = ","
+            lexer.whitespace_split = True
+            try:
+                return [item.strip() for item in lexer if item.strip()]
+            except ValueError:
+                return []
+        if value and not value.startswith("#"):
+            return []
+        items = []
+        for item in lines[index + 1:]:
+            if not item.strip() or item.lstrip().startswith("#"):
+                continue
+            match = re.match(r"^[ \t]*-[ \t]+(.+)$", item)
+            if not match:
+                break
+            try:
+                items.append(" ".join(shlex.split(match[1], comments=True)))
+            except ValueError:
+                return []
+        return items
+    return []
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--verify-migration", action="store_true")
-    args = parser.parse_args()
+    parser.parse_args()
     errors = []
-    pages = sorted(Path("content").rglob("*.md"))
+    content = Path("content")
+    pages = sorted(content.rglob("*.md"))
+    covers = {}
+
+    def check_image(page, reference):
+        url = urlsplit(reference)
+        name = Path(unquote(url.path))
+        if (url.scheme or url.netloc or url.query or url.fragment
+                or name.is_absolute() or len(name.parts) != 1 or "\\" in reference):
+            errors.append(f"{page}: image must be in the article directory: {reference}")
+            return
+        image = page.parent / name
+        if image.suffix.lower() not in IMAGE_SUFFIXES:
+            errors.append(f"{page}: unsupported image type: {reference}")
+        if not (image.is_file() and not image.is_symlink() and image.stat().st_size > 0):
+            errors.append(f"{page}: missing or empty local image: {reference}")
+
     if not pages:
         errors.append("No content pages found")
     for page in pages:
@@ -23,7 +92,7 @@ def main():
             continue
         stem, language = match.groups()
         peer = page.with_name(f"{stem}.{'zh' if language == 'en' else 'en'}.md")
-        if not peer.exists():
+        if not peer.is_file():
             errors.append(f"{page}: missing translation {peer}")
         text = page.read_text()
         parts = text.split("---", 2)
@@ -32,25 +101,42 @@ def main():
             continue
         header, body = parts[1:]
         required = ["title"]
-        if "blog" in page.parts and stem == "index":
+        article = page.is_relative_to(content / "blog") and stem != "_index"
+        if article:
+            prose = prose_only(body)
+            if stem != "index" or page.parent == content / "blog":
+                errors.append(f"{page}: use content/blog/<slug>/index.{language}.md page bundles")
             required += ["date", "description"]
             if not body.strip():
                 errors.append(f"{page}: empty article")
+            for key in ("authors", "categories", "tags"):
+                if not metadata_list(header, key):
+                    errors.append(f"{page}: missing non-empty {key} list")
+            images = metadata_list(header, "images")
+            if not images:
+                errors.append(f"{page}: set images: [thumbnail.webp] to a local thumbnail")
+            else:
+                covers[page] = images[0]
+                for image in images:
+                    check_image(page, image)
+            for image in re.findall(r"!\[[^\]]*\]\(\s*(?:<([^>]+)>|([^\s)]+))", prose):
+                check_image(page, image[0] or image[1])
+            definitions = re.findall(r"^\[\^([^\]]+)\]:", prose, re.M)
+            references = set(re.findall(r"\[\^([^\]]+)\](?!:)", prose))
+            if len(definitions) != len(set(definitions)):
+                errors.append(f"{page}: duplicate footnote definitions")
+            for reference in sorted(references - set(definitions)):
+                errors.append(f"{page}: missing footnote definition: {reference}")
         for field in required:
             if not re.search(rf"^{field}:\s*\S", header, re.M):
                 errors.append(f"{page}: missing {field}")
-        if "leetcode" in str(page).lower():
-            errors.append(f"{page}: excluded legacy article")
-        if "```Links" in body:
-            errors.append(f"{page}: unconverted legacy link component")
 
-    if args.verify_migration:
-        manifest = json.loads(Path("data/migration.json").read_text())
-        for article in manifest["articles"]:
-            page = Path(article["destination"])
-            body = page.read_text().split("---", 2)[2]
-            if hashlib.sha256(body.encode()).hexdigest() != article["body_sha256"]:
-                errors.append(f"{page}: differs from the recorded original body")
+    for page, cover in covers.items():
+        language = page.name.rsplit(".", 2)[1]
+        peer = page.with_name(f"index.{'zh' if language == 'en' else 'en'}.md")
+        if peer in covers and covers[peer] != cover:
+            errors.append(f"{page}: language editions must share the same thumbnail as {peer}")
+
     for error in errors:
         print(error)
     if errors:

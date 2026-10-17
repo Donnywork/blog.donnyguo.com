@@ -22,12 +22,14 @@ languages:
     hasCJKLanguage: true
     params:
       description: 关于开源、自托管、安全与技术探索的实践笔记。
+      copyright:
+        authors: '[郭东平](https://donnyguo.com/)'
     menus:
       main:
         - {name: 博客, pageRef: /blog, weight: 10}
         - {name: 项目与朋友, pageRef: /friends, weight: 20}
         - {name: 关于, pageRef: /about, weight: 30}
-        - {name: GitHub, url: 'https://github.com/Donny-Guo', weight: 40}
+        - {name: GitHub, url: 'https://github.com/Donnywork', weight: 40}
   en:
     label: English
     locale: en-US
@@ -39,7 +41,7 @@ languages:
         - {name: Blog, pageRef: /blog, weight: 10}
         - {name: Projects & Friends, pageRef: /friends, weight: 20}
         - {name: About, pageRef: /about, weight: 30}
-        - {name: GitHub, url: 'https://github.com/Donny-Guo', weight: 40}
+        - {name: GitHub, url: 'https://github.com/Donnywork', weight: 40}
 
 taxonomies:
   tag: tags
@@ -70,7 +72,7 @@ markup:
     endLevel: 4
 
 params:
-  logo: icons/logo.svg
+  logo: /favicon.svg
   offline_search: true
   offline_search_index: content
   copyright:
@@ -80,11 +82,12 @@ params:
     preset: paper
     preset_menu: [paper, slate, ink, terminal]
     dark_mode: true
-    blog_index: list
-    blog_index_toggle: true
+    blog_index: cards
+    blog_index_columns: 3
+    blog_index_toggle: false
     reading_time: true
     image_zoom: true
     quick_links: [blog]
-    share: [copy]
+    share: []
     annotation: false
     feedback: false

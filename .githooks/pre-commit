@@ -1,6 +1,14 @@
 #!/bin/sh
 set -eu
 
-cd "$(git rev-parse --show-toplevel)"
+repository=$(git rev-parse --show-toplevel)
+cd "$repository"
 git diff --cached --check
-exec make check
+
+# Check only staged content so an unstaged thumbnail cannot hide a missing asset.
+snapshot=$(mktemp -d)
+trap 'rm -rf "$snapshot"' EXIT
+git checkout-index --all --prefix="$snapshot/"
+(cd "$snapshot" && python3 "$repository/bin/check-content.py")
+
+make check

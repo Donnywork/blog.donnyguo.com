@@ -4,11 +4,11 @@ sections:
     type: cards
     partial: landing/recent-posts.html
 hero:
-  eyebrow: Dongping Guo · Donny
+  eyebrow: 郭东平 · Donny
   title: 记录实践，保持好奇。
   title_size: 3.5rem
   lead: 从自托管到开源工具，写下探索技术时的思考、实验与收获。
-  image: {src: images/avatar.png, alt: Donny}
+  image: {src: images/avatar.png, alt: 郭东平}
   media: {max_width: 240px, ratio: 1fr 240px, hide_below: md}
   actions:
     - {label: 阅读博客, url: blog/, style: primary, icon: fa-solid fa-arrow-right}
@@ -16,4 +16,3 @@ hero:
 recent:
   eyebrow: 技术与实践
   title: 最近文章
-  link_label: 阅读全文

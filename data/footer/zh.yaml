@@ -10,6 +10,6 @@ columns:
       - {label: 关于, url: about/}
   - title: 关注
     links:
-      - {label: GitHub, url: 'https://github.com/Donny-Guo'}
+      - {label: GitHub, url: 'https://github.com/Donnywork'}
       - {label: LinkedIn, url: 'https://www.linkedin.com/in/dongpingguo/'}
       - {label: RSS 订阅, url: blog/index.xml}

@@ -10,6 +10,6 @@ columns:
       - {label: About, url: about/}
   - title: Follow
     links:
-      - {label: GitHub, url: 'https://github.com/Donny-Guo'}
+      - {label: GitHub, url: 'https://github.com/Donnywork'}
       - {label: LinkedIn, url: 'https://www.linkedin.com/in/dongpingguo/'}
       - {label: RSS, url: blog/index.xml}

@@ -2,6 +2,15 @@
   border-radius: 50%;
 }
 
-.td-landing-card__meta {
-  font-variant-numeric: tabular-nums;
+.td-blog-card__image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.td-blog-card__image[src$='.svg'] {
+  object-fit: contain;
+  padding: 1.5rem;
+  background: #f5f7f6;
 }

@@ -52,11 +52,6 @@ static/images/          # Shared site images, such as the avatar
 bin/                    # Content and generated-site checks
 ```
 
-Articles and profile content were migrated from
-[DonnyBlog](https://github.com/Donny-Guo/DonnyBlog), excluding the first LeetCode
-post. English articles retain their original bodies; Chinese editions are
-translations. The old article URLs redirect to the English editions.
-
 The structure and build workflow are inspired by
 [Vonng's blog](https://github.com/Vonng/vonng.com) (CC BY 4.0); the checks here
 are written for this site's bilingual routes.
