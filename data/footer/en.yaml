@@ -1,0 +1,15 @@
+brand:
+  logo: /favicon.svg
+  name: Donny’s Blog
+  tagline: Build. Learn. Keep exploring.
+columns:
+  - title: Explore
+    links:
+      - {label: Blog, url: blog/}
+      - {label: Projects & Friends, url: friends/}
+      - {label: About, url: about/}
+  - title: Follow
+    links:
+      - {label: GitHub, url: 'https://github.com/Donny-Guo'}
+      - {label: LinkedIn, url: 'https://www.linkedin.com/in/dongpingguo/'}
+      - {label: RSS, url: blog/index.xml}

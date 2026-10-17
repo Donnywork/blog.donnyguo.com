@@ -1,0 +1,19 @@
+{
+  "source": "https://github.com/Donny-Guo/DonnyBlog",
+  "revision": "94672751663ff6f41624343c4390cda4483341c7",
+  "excluded": [
+    "posts/Leetcode.md"
+  ],
+  "articles": [
+    {
+      "source": "posts/gpg-verification.md",
+      "destination": "content/blog/gpg-verification/index.en.md",
+      "body_sha256": "5938bab2722f2a3df9695318445ae519003a4d30d27a2849d8006c6a880fe69c"
+    },
+    {
+      "source": "posts/self-hosting-searxng.md",
+      "destination": "content/blog/self-hosting-searxng/index.en.md",
+      "body_sha256": "74835db6eae1f5229bc22d9b09e47719e1804a44f21d600e2c6fa2dfac5f6691"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+brand:
+  logo: /favicon.svg
+  name: Donny 的博客
+  tagline: 记录实践，保持好奇。
+columns:
+  - title: 探索
+    links:
+      - {label: 博客, url: blog/}
+      - {label: 项目与朋友, url: friends/}
+      - {label: 关于, url: about/}
+  - title: 关注
+    links:
+      - {label: GitHub, url: 'https://github.com/Donny-Guo'}
+      - {label: LinkedIn, url: 'https://www.linkedin.com/in/dongpingguo/'}
+      - {label: RSS 订阅, url: blog/index.xml}

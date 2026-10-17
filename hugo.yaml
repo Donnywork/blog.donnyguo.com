@@ -1,0 +1,89 @@
+baseURL: https://blog.donnyguo.com/
+title: Donny's Blog
+defaultContentLanguage: zh
+enableRobotsTXT: true
+timeZone: America/New_York
+summaryLength: 40
+
+module:
+  proxy: https://proxy.golang.org,direct
+  imports:
+    - path: github.com/pgsty/oink
+  hugoVersion:
+    extended: true
+    min: 0.166.0
+
+languages:
+  zh:
+    label: 简体中文
+    locale: zh-CN
+    weight: 1
+    title: Donny 的博客
+    hasCJKLanguage: true
+    params:
+      description: 关于开源、自托管、安全与技术探索的实践笔记。
+    menus:
+      main:
+        - {name: 博客, pageRef: /blog, weight: 10}
+        - {name: 项目与朋友, pageRef: /friends, weight: 20}
+        - {name: 关于, pageRef: /about, weight: 30}
+        - {name: GitHub, url: 'https://github.com/Donny-Guo', weight: 40}
+  en:
+    label: English
+    locale: en-US
+    weight: 2
+    params:
+      description: Practical notes on open source, self-hosting, security, and exploring technology.
+    menus:
+      main:
+        - {name: Blog, pageRef: /blog, weight: 10}
+        - {name: Projects & Friends, pageRef: /friends, weight: 20}
+        - {name: About, pageRef: /about, weight: 30}
+        - {name: GitHub, url: 'https://github.com/Donny-Guo', weight: 40}
+
+taxonomies:
+  tag: tags
+  category: categories
+  author: authors
+
+outputs:
+  home: [HTML, RSS, markdown, LLMS]
+  page: [HTML, markdown]
+  section: [HTML, RSS, markdown]
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+    parser:
+      wrapStandAloneImageWithinParagraph: false
+      attribute:
+        block: true
+    extensions:
+      cjk:
+        enable: true
+        eastAsianLineBreaks: true
+  highlight:
+    noClasses: false
+  tableOfContents:
+    startLevel: 2
+    endLevel: 4
+
+params:
+  logo: icons/logo.svg
+  offline_search: true
+  offline_search_index: content
+  copyright:
+    authors: '[Dongping Guo](https://donnyguo.com/)'
+    from_year: 2025
+  ui:
+    preset: paper
+    dark_mode: true
+    blog_index: list
+    blog_index_toggle: true
+    reading_time: true
+    image_zoom: true
+    quick_links: [blog]
+    share: [copy]
+    annotation: false
+    feedback: false

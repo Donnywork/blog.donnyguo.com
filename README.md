@@ -1,0 +1,55 @@
+# Donny's Blog
+
+Dongping Guo's notes on open source, self-hosting, and security.
+Built with [Hugo](https://gohugo.io/) and [OINK](https://github.com/pgsty/oink).
+
+- Chinese: https://blog.donnyguo.com/
+- English: https://blog.donnyguo.com/en/
+
+## Build
+
+Requires **Hugo Extended 0.166.0+**, **Go 1.27+**, and **Python 3.11+**.
+
+```sh
+make dev     # Preview at localhost:18743
+make build   # Production site in public/
+make check   # Content, strict build, links, assets, and language pairs
+```
+
+OINK is pinned in `go.mod`. Upgrade with
+`hugo mod get github.com/pgsty/oink@vX.Y.Z && hugo mod tidy`.
+
+## Publish
+
+Enable GitHub Pages with **GitHub Actions** as its source. The Pages workflow
+deploys pushes to `main`; pull requests run checks only. Set the Pages custom
+domain to `blog.donnyguo.com` and configure its DNS before using that address.
+The workflow uses the URL reported by Pages, including repository subpaths.
+
+For other static hosts, use `make build BASE_URL=https://your-domain/` and
+publish `public/` with the same Hugo and Go versions.
+
+## Layout
+
+```text
+hugo.yaml               # Site settings and localized menus
+content/                # Paired index.en.md and index.zh.md pages
+content/blog/<post>/     # Article text and its shared images in one page bundle
+data/home/              # Localized home page copy
+data/footer/            # Localized footer links
+assets/                 # Site branding and styles
+layouts/                # Small additions to the theme
+static/images/          # Shared site images, such as the avatar
+bin/                    # Content and generated-site checks
+```
+
+Articles and profile content were migrated from
+[DonnyBlog](https://github.com/Donny-Guo/DonnyBlog), excluding the first LeetCode
+post. English articles retain their original bodies; Chinese editions are
+translations. The old article URLs redirect to the English editions.
+
+The structure and strict-build workflow are inspired by
+[Vonng's blog](https://github.com/Vonng/vonng.com) (CC BY 4.0); the checks here
+are written for this site's bilingual routes. Article content retains its
+original [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) license.
+OINK is Apache-2.0 licensed.

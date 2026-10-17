@@ -1,0 +1,19 @@
+sections:
+  - hero
+  - key: recent
+    type: cards
+    partial: landing/recent-posts.html
+hero:
+  eyebrow: Dongping Guo · Donny
+  title: Build. Learn. Keep exploring.
+  title_size: 3.5rem
+  lead: Notes from exploring technology — self-hosted services, open-source tools, and the lessons along the way.
+  image: {src: images/avatar.png, alt: Donny}
+  media: {max_width: 240px, ratio: 1fr 240px, hide_below: md}
+  actions:
+    - {label: Read the blog, url: blog/, style: primary, icon: fa-solid fa-arrow-right}
+    - {label: About me, url: about/, style: ghost}
+recent:
+  eyebrow: Technology & practice
+  title: Recent posts
+  link_label: Read article
