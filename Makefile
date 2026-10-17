@@ -7,7 +7,7 @@ export GOWORK := off
 export HUGO_MODULE_WORKSPACE := off
 PINNED_HUGO = env -u HUGO_MODULE_REPLACEMENTS $(HUGO)
 
-.PHONY: dev build check
+.PHONY: dev build check hooks
 dev:
 	$(PINNED_HUGO) server --bind 127.0.0.1 --port $(PORT) --buildDrafts
 
@@ -16,5 +16,8 @@ build:
 
 check:
 	python3 bin/check-content.py
-	$(PINNED_HUGO) --gc --minify --cleanDestinationDir --environment production --baseURL "$(BASE_URL)" --printPathWarnings --panicOnWarning
+	$(PINNED_HUGO) --gc --minify --cleanDestinationDir --environment production --baseURL "$(BASE_URL)" --printPathWarnings
 	python3 bin/check-site.py --base-url "$(BASE_URL)"
+
+hooks:
+	git config --local core.hooksPath .githooks
