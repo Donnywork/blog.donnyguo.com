@@ -59,6 +59,8 @@ translations. The old article URLs redirect to the English editions.
 
 The structure and build workflow are inspired by
 [Vonng's blog](https://github.com/Vonng/vonng.com) (CC BY 4.0); the checks here
-are written for this site's bilingual routes. Article content retains its
-original [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) license.
+are written for this site's bilingual routes.
+
+Original articles and profile content are copyright Dongping Guo and licensed
+under [CC BY 4.0](LICENSE). Third-party assets retain their respective licenses;
 OINK is Apache-2.0 licensed.

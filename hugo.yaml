@@ -78,6 +78,7 @@ params:
     from_year: 2025
   ui:
     preset: paper
+    preset_menu: [paper, slate, ink, terminal]
     dark_mode: true
     blog_index: list
     blog_index_toggle: true
