@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">SSH key and TOTP two-factor authentication</title>
+  <desc id="desc">Original illustration: an SSH terminal and an authenticator connected by a line, representing key and code authentication on Ubuntu 24.04.</desc>
+  <defs>
+    <linearGradient id="background" x2="1" y2="1">
+      <stop stop-color="#101f30"/>
+      <stop offset="1" stop-color="#061421"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#9ac8cc" stroke-opacity=".055"/>
+    </pattern>
+  </defs>
+  <rect width="1280" height="720" fill="url(#background)"/>
+  <rect width="1280" height="720" fill="url(#grid)"/>
+  <circle cx="1090" cy="328" r="245" fill="#50d5b1" opacity=".025"/>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <text x="88" y="93" fill="#83d7c2" font-size="19" font-weight="700" letter-spacing="4">SECURE SHELL / TWO FACTORS</text>
+    <text x="83" y="205" fill="#f3f7f5" font-size="100" font-weight="700" letter-spacing="-4">SSH</text>
+    <text x="321" y="201" fill="#b9d4db" font-size="42" font-weight="400">Key + TOTP</text>
+    <rect x="88" y="258" width="668" height="328" rx="18" fill="#08101c" stroke="#314456" stroke-width="2"/>
+    <path d="M106 258H738Q756 258 756 276V312H88V276Q88 258 106 258Z" fill="#1b2c3d"/>
+    <g fill="#62818d">
+      <circle cx="116" cy="285" r="6"/>
+      <circle cx="138" cy="285" r="6"/>
+      <circle cx="160" cy="285" r="6"/>
+    </g>
+    <text x="202" y="291" fill="#acc2ce" font-size="16">you@ubuntu</text>
+    <g font-family="Menlo, Consolas, monospace" font-size="23">
+      <text x="120" y="363" fill="#e2edf2"><tspan fill="#83d7c2">$</tspan> ssh you@your-server</text>
+      <text x="120" y="416" fill="#83d7c2">Public key accepted.</text>
+      <text x="120" y="461" fill="#e2edf2">Verification code: <tspan fill="#83d7c2">******</tspan></text>
+      <text x="120" y="538" fill="#83d7c2">Access granted.<tspan fill="#e2edf2"> _</tspan></text>
+    </g>
+    <path d="M756 434H816Q843 434 843 407V397Q843 370 870 370H908" fill="none" stroke="#83d7c2" stroke-width="3" stroke-dasharray="8 8"/>
+    <rect x="914" y="207" width="242" height="386" rx="32" fill="#1b2c3d" stroke="#4e6c79" stroke-width="2"/>
+    <rect x="928" y="224" width="214" height="352" rx="22" fill="#102231"/>
+    <rect x="1007" y="235" width="56" height="5" rx="2.5" fill="#4e6c79"/>
+    <g transform="translate(999 278)" fill="none" stroke="#83d7c2" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M13 31V18a23 23 0 0 1 46 0v13"/>
+      <rect x="0" y="31" width="72" height="55" rx="10"/>
+      <path d="M36 51v15"/>
+    </g>
+    <text x="1035" y="404" text-anchor="middle" fill="#acc2ce" font-size="16" letter-spacing="2">ONE-TIME CODE</text>
+    <text x="1035" y="454" text-anchor="middle" fill="#f3f7f5" font-family="Menlo, Consolas, monospace" font-size="34" font-weight="700">482 917</text>
+    <rect x="957" y="480" width="156" height="5" rx="2.5" fill="#314456"/>
+    <rect x="957" y="480" width="108" height="5" rx="2.5" fill="#83d7c2"/>
+    <text x="1035" y="532" text-anchor="middle" fill="#83d7c2" font-size="15" letter-spacing="2">TOTP</text>
+    <text x="88" y="650" fill="#8ba8b8" font-size="19" letter-spacing="2">UBUNTU 24.04</text>
+    <text x="1192" y="650" text-anchor="end" fill="#8ba8b8" font-size="18">Key verified. Code required.</text>
+  </g>
+</svg>
